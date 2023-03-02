@@ -1,8 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
 
 function App() {
+  const getCurrentLocation = () =>
+    new Promise((resolve, reject) => {
+      // eslint-disable-next-line no-undef
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const coordinates = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+
+          return resolve(coordinates);
+        },
+        (error) => {
+          reject(error?.message);
+        }
+      );
+    });
+
+  const onClick = () => {
+    getCurrentLocation()
+      .then((position) => {
+        alert("".concat(position.lat).concat("\n").concat(position.lng));
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  };
+
   return (
     <div className="App">
       <header className="App-header">
@@ -10,14 +38,7 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <button onClick={() => onClick()}>Position</button>
       </header>
     </div>
   );
